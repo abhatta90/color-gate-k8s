@@ -1,0 +1,3 @@
+rootProject.name = 'color-gate-k8s'
+
+include 'color-gate-spring-boot-starter', 'sample-service', 'dev-k8s-api'

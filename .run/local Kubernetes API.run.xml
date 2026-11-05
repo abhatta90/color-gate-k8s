@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="local Kubernetes API" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.example.colorgate.devk8s.LocalKubernetesApi" />
+    <module name="color-gate-k8s.dev-k8s-api.main" />
+    <option name="PROGRAM_PARAMETERS" value="8001" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

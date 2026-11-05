@@ -1,0 +1,16 @@
+plugins {
+    id 'application'
+}
+
+description = 'Development only: an in-memory fake Kubernetes API on localhost, to try the color gate without a cluster'
+
+dependencies {
+    implementation "io.fabric8:kubernetes-server-mock:${fabric8Version}"
+    // The mock server expects the client and the Kubernetes model classes to be provided
+    implementation "io.fabric8:kubernetes-client:${fabric8Version}"
+    runtimeOnly 'ch.qos.logback:logback-classic'
+}
+
+application {
+    mainClass = 'com.example.colorgate.devk8s.LocalKubernetesApi'
+}

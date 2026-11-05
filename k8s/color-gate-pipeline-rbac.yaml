@@ -1,0 +1,29 @@
+# Color gate: permission for the DEPLOYMENT PIPELINE to switch the active color. One per cluster.
+#
+#   kubectl --context <cluster> apply -f k8s/color-gate-pipeline-rbac.yaml
+#
+# Only needed if the pipeline's identity cannot already create/update ConfigMaps in namespace color-gate.
+# Replace the subject with your pipeline's ServiceAccount (or Google service account / group).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: color-gate-switcher
+  namespace: color-gate
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: color-gate-switcher
+  namespace: color-gate
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: color-gate-switcher
+subjects:
+  - kind: ServiceAccount
+    name: deploy-pipeline                  # ← your pipeline's ServiceAccount
+    namespace: ci                          # ← and its namespace

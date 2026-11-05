@@ -1,0 +1,38 @@
+# Color gate: one-time setup, ONE PER CLUSTER (platform team / GitOps).
+#
+#   kubectl --context <cluster> apply -f k8s/color-gate-rbac.yaml
+#
+# Creates the color-gate namespace and lets every pod in the "blue" and "green" namespaces READ (get/list/watch)
+# the ConfigMap color-gate in it. Nothing else. Adjust the namespace names under "subjects" if yours differ.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: color-gate
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: color-gate-reader
+  namespace: color-gate
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["color-gate"]          # only this one ConfigMap
+    verbs: ["get", "list", "watch"]        # read only; list/watch work because the informer selects it by name
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: color-gate-reader
+  namespace: color-gate
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: color-gate-reader
+subjects:
+  - kind: Group                            # = every ServiceAccount (every pod) in namespace "blue"
+    apiGroup: rbac.authorization.k8s.io
+    name: system:serviceaccounts:blue
+  - kind: Group                            # = every ServiceAccount (every pod) in namespace "green"
+    apiGroup: rbac.authorization.k8s.io
+    name: system:serviceaccounts:green

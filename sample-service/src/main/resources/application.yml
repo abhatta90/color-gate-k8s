@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: sample-service
+  datasource:
+    # Override with env vars; never put a real password in this file.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/colorgate_k8s}
+    username: ${DB_USER:colorgate}
+    password: ${DB_PASSWORD:}   # default empty: Homebrew Postgres trusts local connections
+  sql:
+    init:
+      mode: always        # creates the job tables on startup (CREATE TABLE IF NOT EXISTS)
+      schema-locations: classpath:schema.sql
+
+server:
+  port: 8080              # the IntelliJ run configs use 8081 for BLUE and 8082 for GREEN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, colorgate, metrics
+
+colorgate:
+  # This pod's color: from its namespace (blue / green) or the APP_COLOR env var.
+  # The active color: ConfigMap color-gate/color-gate, key active-color (BLUE, GREEN or NONE), pushed by an informer.
+  config-map:
+    namespace: color-gate
+    name: color-gate
+    key: active-color

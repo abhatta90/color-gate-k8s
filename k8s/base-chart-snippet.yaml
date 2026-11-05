@@ -1,0 +1,23 @@
+# Color gate: what the shared BASE HELM CHART needs (Deployment template). Usually nothing, see notes.
+#
+# 1. ServiceAccount token: pods need it to talk to the Kubernetes API. It is mounted by default.
+#    Only if your chart disables it, re-enable it:
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: true
+
+      # 2. Shutdown time of the old color is most of the switch window. User traffic has already moved when the
+      #    old color is stopped, so a long HTTP drain is not needed. Tune to your shutdown needs.
+      terminationGracePeriodSeconds: 15
+
+      containers:
+        - name: app
+          env:
+            # 3. Optional. The library takes the color from the namespace name (blue / green, or *-blue / *-green).
+            #    Set APP_COLOR only if your namespaces are named differently; if both exist they must agree.
+            - name: APP_COLOR
+              value: "{{ .Values.color }}"
+
+# 4. NetworkPolicy: if egress from the pods is restricted, allow traffic to the Kubernetes API server
+#    (the "kubernetes" Service in namespace default, port 443, and the control plane IP on GKE).

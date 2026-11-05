@@ -1,0 +1,13 @@
+# Color gate: the ConfigMap itself. Create it ONCE per cluster, with the color that is live today.
+#
+#   kubectl --context <cluster> create -f k8s/color-gate-configmap.yaml
+#
+# Use "create", not "apply", and do NOT put this file in any Helm chart or GitOps sync: re-applying it would reset
+# the active color. After creation only the pipeline's switch step changes it (scripts/switch.sh, or kubectl patch).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: color-gate
+  namespace: color-gate
+data:
+  active-color: BLUE                       # BLUE | GREEN | NONE (NONE = no color runs background work)

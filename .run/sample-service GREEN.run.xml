@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sample-service GREEN" type="Application" factoryName="Application">
+    <envs>
+      <env name="KUBERNETES_MASTER" value="http://127.0.0.1:8001" />
+      <env name="KUBERNETES_NAMESPACE" value="green" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.example.colorgate.sample.SampleApplication" />
+    <module name="color-gate-k8s.sample-service.main" />
+    <option name="PROGRAM_PARAMETERS" value="--server.port=8082" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

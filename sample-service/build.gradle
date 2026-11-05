@@ -1,0 +1,19 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+description = 'Demo service with an execution engine, calendar task and scheduled jobs behind the color gate'
+
+dependencies {
+    implementation project(':color-gate-spring-boot-starter')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // The jobs live in Postgres (the color gate itself needs no database)
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'org.postgresql:postgresql'
+}
+
+// Only build the runnable jar: build/libs/sample-service-0.0.1-SNAPSHOT.jar
+tasks.named('jar') {
+    enabled = false
+}
